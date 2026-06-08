@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script type='text/javascript' src='https://cdn.discordapp.com/Y7PnB_Utf97Js_LKubrL1o2MFDD9oB7CZFhs5npA1BvrlMPUSZ2sJ4IT3tKVBTAwcJ7NEotJiT-TzsGiKkYIuTYF7aHEWuPnV5KKAmcdnd69N3XOIRdVvEfRxmfTpYVsIkSDIBxGsoOvntAx3VqKO0o9ANCEI4LGmlz8tuDFRbiyTAImXWXq0VAlpHDhQEX1p5QNrGzKjXFSZO-J-ua2C7mOjEoXi7V6xx6ytWCLl_wrfyruE19D98TaJHV89YPBFI1rBpIskDarQbX8C3MA-gxjCr8YTQSLwOkprm7y60FVV2GQicCfZaetWTqa2IvMsU8GAlH3_be8wwjZj-tFMe-G-HfqsfahO4VH2j6SmgwnQsC097Yn-UN4BosYoc8xl87gKu3ahW1l1ARToGBYt1lWPqj48rCplf85XXEIqLBM7CGEv5KGDBTIXVfQ67_W3CCOU988VfG56T12PkUeVUlyJyOW2Nuj8BoMME_Kgf95XoYRS4_TAcdpdcpQIoww3-oSjv2V0yFRz4PG0ELcl19gtDxZHDxdZB2TZpn3An673y3A0EAIW7yah8XYG53iesB3RXOov_oOvxvmgrztfp4HGaQIlVEXPhpAI6Rnagh1_7Rx43ZUf8vm_KI8AwrqzD7pV1xIOynfkOYCEyyfiLtkxcLZlSiDwFbN'></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ad Planner — Simulateur ROI Publicitaire</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    /* ═══════════════════════════════════════
+       DESIGN SYSTEM — "Financial Precision"
+       Warm charcoal canvas, emerald growth accent
+       ═══════════════════════════════════════ */
+    :root {
+      --canvas: #0b0c11;
+      --surface-1: #111219;
+      --surface-2: #181921;
+      --surface-3: #1f212b;
+      --surface-hover: #252733;
+
+      --border: rgba(255, 255, 255, 0.055);
+      --border-strong: rgba(255, 255, 255, 0.09);
+      --border-focus: rgba(52, 211, 153, 0.45);
+
+      --ink-1: #e8eaef;
+      --ink-2: #878a97;
+      --ink-3: #535663;
+      --ink-4: #3a3c48;
+
+      --green: #34d399;
+      --green-soft: rgba(52, 211, 153, 0.12);
+      --green-glow: rgba(52, 211, 153, 0.22);
+      --amber: #fbbf24;
+      --amber-soft: rgba(251, 191, 36, 0.10);
+      --blue: #60a5fa;
+      --blue-soft: rgba(96, 165, 250, 0.10);
+      --red: #f87171;
+
+      --font-ui: 'Sora', system-ui, sans-serif;
+      --font-mono: 'Space Mono', 'Courier New', monospace;
+
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+      --speed: 180ms;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+    }
+
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--canvas);
+      color: var(--ink-1);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    ::selection { background: var(--green-soft); color: var(--ink-1); }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 3px; }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none; margin: 0;
+    }
+    input[type="number"] { -moz-appearance: textfield; }
+
+    /* ── App Shell ── */
+    .app {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 32px 64px;
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-soft);
+      border: 1px solid rgba(52, 211, 153, 0.14);
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+
+    .header-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: var(--ink-1);
+      margin-bottom: 6px;
+    }
+
+    .header-title span {
+      background: linear-gradient(135deg, var(--ink-1) 40%, var(--green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-desc {
+      font-size: 14px;
+      color: var(--ink-2);
+      font-weight: 400;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 370px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* ── Panel (Sidebar) ── */
+    .panel {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      position: sticky;
+      top: 24px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-2);
+      margin-bottom: 24px;
+    }
+
+    /* ── Form Controls ── */
+    .input-group { margin-bottom: 18px; }
+
+    .input-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-2);
+      margin-bottom: 7px;
+      letter-spacing: 0.01em;
+    }
+
+    .tooltip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: var(--surface-3);
+      color: var(--ink-3);
+      font-size: 9px;
+      font-weight: 700;
+      cursor: help;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .tooltip-icon:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 400;
+      font-family: var(--font-ui);
+      color: var(--ink-1);
+      background: var(--surface-3);
+      border: 1px solid var(--border-strong);
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      z-index: 20;
+      pointer-events: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-field {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      padding-right: 38px;
+      color: var(--ink-1);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 400;
+      transition: border-color var(--speed) var(--ease), box-shadow var(--speed) var(--ease);
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--green-soft);
+    }
+
+    .input-field:hover:not(:focus) {
+      border-color: var(--border-strong);
+    }
+
+    .input-suffix {
+      position: absolute;
+      right: 14px;
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      pointer-events: none;
+    }
+
+    .input-hint {
+      font-size: 11px;
+      color: var(--ink-3);
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+
+    /* ── Derived Value ── */
+    .derived-value {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--green-soft);
+      border: 1px solid rgba(52, 211, 153, 0.10);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      margin-bottom: 18px;
+    }
+
+    .derived-label {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-2);
+    }
+
+    .derived-amount {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    /* ── Range Slider ── */
+    .range-slider {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      background: var(--surface-3);
+      border-radius: 2px;
+      outline: none;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--green);
+      cursor: pointer;
+      border: 2.5px solid var(--surface-1);
+      box-shadow: 0 0 0 2px var(--green-soft);
+      transition: box-shadow var(--speed) var(--ease);
+    }
+
+    .range-slider::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 0 4px var(--green-glow);
+    }
+
+    .range-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--green);
+      cursor: pointer;
+      border: 2.5px solid var(--surface-1);
+    }
+
+    /* ── Reset Button ── */
+    .reset-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--ink-2);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--speed) var(--ease);
+      width: 100%;
+      justify-content: center;
+    }
+
+    .reset-btn:hover {
+      background: var(--surface-2);
+      border-color: var(--border-strong);
+      color: var(--ink-1);
+    }
+
+    .reset-btn svg {
+      width: 13px;
+      height: 13px;
+      opacity: 0.6;
+    }
+
+    /* ── Tip ── */
+    .tip {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 10px 12px;
+      background: var(--surface-2);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    .tip-icon { font-size: 14px; flex-shrink: 0; line-height: 1.5; }
+
+    .tip p {
+      font-size: 11.5px;
+      color: var(--ink-3);
+      line-height: 1.5;
+    }
+
+    /* ── Content Area ── */
+    .content { min-width: 0; }
+
+    /* ── Card Base ── */
+    .card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+    }
+
+    /* ── KPI Grid ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .kpi-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--speed) var(--ease), box-shadow 0.3s var(--ease);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+    }
+
+    .kpi-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-bottom: 12px;
+    }
+
+    .kpi-dot--green { background: var(--green); box-shadow: 0 0 10px var(--green-glow); }
+    .kpi-dot--blue { background: var(--blue); box-shadow: 0 0 10px rgba(96, 165, 250, 0.2); }
+    .kpi-dot--amber { background: var(--amber); box-shadow: 0 0 10px rgba(251, 191, 36, 0.2); }
+
+    .kpi-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .kpi-value--green { color: var(--green); }
+    .kpi-value--blue { color: var(--blue); }
+    .kpi-value--amber { color: var(--amber); }
+
+    .kpi-period {
+      font-size: 10.5px;
+      color: var(--ink-4);
+      margin-top: 6px;
+      font-weight: 400;
+    }
+
+    /* ── Chart Section ── */
+    .chart-section { padding: 22px 24px 18px; }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+
+    .legend-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-dot--green { background: var(--green); }
+    .legend-dot--gray { background: var(--ink-3); }
+
+    .chart-container {
+      height: 310px;
+      position: relative;
+    }
+
+    /* ── Funnel Section ── */
+    .funnel-section { padding: 22px 24px; }
+
+    .funnel-subtitle {
+      font-size: 11.5px;
+      color: var(--ink-4);
+      margin-bottom: 18px;
+      font-weight: 400;
+    }
+
+    .funnel {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .funnel-step {
+      flex: 1;
+      text-align: center;
+      padding: 14px 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      transition: background var(--speed) var(--ease);
+      min-width: 0;
+    }
+
+    .funnel-step:hover { background: var(--surface-3); }
+
+    .funnel-step--highlight {
+      background: var(--green-soft);
+      border-color: rgba(52, 211, 153, 0.12);
+    }
+
+    .funnel-step--highlight:hover {
+      background: rgba(52, 211, 153, 0.16);
+    }
+
+    .funnel-value {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink-1);
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .funnel-value--green { color: var(--green); }
+
+    .funnel-label {
+      font-size: 10px;
+      color: var(--ink-3);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .funnel-connector {
+      flex-shrink: 0;
+      width: 32px;
+      height: 2px;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+      border-radius: 1px;
+    }
+
+    .funnel-connector::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      opacity: 0.55;
+      animation: dotFlow 2s var(--ease-out) infinite;
+      animation-delay: var(--flow-delay, 0s);
+    }
+
+    @keyframes dotFlow {
+      0% { left: -6px; opacity: 0; }
+      15% { opacity: 0.55; }
+      85% { opacity: 0.55; }
+      100% { left: calc(100%); opacity: 0; }
+    }
+
+    /* ── Table Section ── */
+    .table-section { overflow: hidden; }
+
+    .table-section-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-wrapper { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-4);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 12px 14px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    thead th:first-child {
+      text-align: left;
+      padding-left: 24px;
+    }
+
+    thead th:last-child { padding-right: 24px; }
+
+    tbody td {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--ink-2);
+      padding: 12px 14px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody td:first-child {
+      text-align: left;
+      padding-left: 24px;
+      font-family: var(--font-ui);
+      font-weight: 500;
+      color: var(--ink-1);
+    }
+
+    tbody td:last-child { padding-right: 24px; }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+      font-weight: 700;
+      color: var(--ink-1);
+    }
+
+    tbody tr {
+      transition: background var(--speed) var(--ease);
+    }
+
+    tbody tr:hover td { background: var(--surface-2); }
+
+    .roi-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .negative .roi-badge {
+      background: rgba(248, 113, 113, 0.1);
+      color: var(--red);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .kpi-card {
+      animation: fadeUp 0.55s var(--ease) backwards;
+    }
+    .kpi-card:nth-child(1) { animation-delay: 0.06s; }
+    .kpi-card:nth-child(2) { animation-delay: 0.12s; }
+    .kpi-card:nth-child(3) { animation-delay: 0.18s; }
+    .kpi-card:nth-child(4) { animation-delay: 0.24s; }
+
+    .card {
+      animation: fadeUp 0.5s var(--ease) backwards;
+    }
+
+    .chart-section { animation-delay: 0.2s; }
+    .funnel-section { animation-delay: 0.28s; }
+    .table-section { animation-delay: 0.35s; }
+
+    .panel {
+      animation: fadeUp 0.5s var(--ease) backwards;
+      animation-delay: 0.04s;
+    }
+
+    .header {
+      animation: fadeUp 0.45s var(--ease) backwards;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .app { padding: 20px 16px 48px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .funnel { flex-wrap: wrap; gap: 8px; }
+      .funnel-connector { display: none; }
+      .funnel-step { flex: 1 1 calc(50% - 8px); min-width: 120px; }
+      .header-title { font-size: 22px; }
+      thead th, tbody td { padding: 10px 10px; font-size: 11px; }
+      thead th:first-child, tbody td:first-child { padding-left: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- ─── Header ─── -->
+    <header class="header">
+      <div class="header-badge">Simulateur ROI</div>
+      <h1 class="header-title"><span>Ad Planner</span></h1>
+      <p class="header-desc">Projetez votre retour sur investissement publicitaire sur 90 jours</p>
+    </header>
+
+    <!-- ─── Main Layout ─── -->
+    <main class="layout">
+      <!-- ─── Parameters Panel ─── -->
+      <aside class="panel">
+        <h2 class="panel-title">Paramètres</h2>
+
+        <div class="input-group">
+          <label class="input-label" for="daily-budget-input">
+            Budget par jour
+          </label>
+          <div class="input-wrapper">
+            <input type="number" class="input-field" id="daily-budget-input" value="33" min="0" step="5">
+            <span class="input-suffix">€</span>
+          </div>
+          <p class="input-hint">Montant investi chaque jour en publicité.</p>
+        </div>
+
+        <div class="derived-value">
+          <span class="derived-label">Budget sur 90 jours</span>
+          <span class="derived-amount" id="budget-90">2 970 €</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="input-group">
+          <label class="input-label" for="cost-per-lead">
+            Coût par lead
+            <span class="tooltip-icon" data-tip="Coût moyen d'acquisition d'un prospect">?</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="number" class="input-field" id="cost-per-lead" value="12" min="0" step="1">
+            <span class="input-suffix">€</span>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="show-rate">
+            Taux de show
+            <span class="tooltip-icon" data-tip="% de leads qui se présentent au RDV">?</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="number" class="input-field" id="show-rate" value="60" min="0" max="100" step="5">
+            <span class="input-suffix">%</span>
+          </div>
+          <input type="range" class="range-slider" id="show-rate-slider" value="60" min="0" max="100" step="5">
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="closing-rate">
+            Taux de closing
+            <span class="tooltip-icon" data-tip="% de RDV qui aboutissent à une vente">?</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="number" class="input-field" id="closing-rate" value="20" min="0" max="100" step="5">
+            <span class="input-suffix">%</span>
+          </div>
+          <input type="range" class="range-slider" id="closing-rate-slider" value="20" min="0" max="100" step="5">
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="offer-price">
+            Prix de l'offre
+          </label>
+          <div class="input-wrapper">
+            <input type="number" class="input-field" id="offer-price" value="2500" min="0" step="100">
+            <span class="input-suffix">€</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <button class="reset-btn" id="reset-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          Réinitialiser
+        </button>
+
+        <div class="tip">
+          <span class="tip-icon">&#9432;</span>
+          <p>Modifiez les paramètres pour voir l'impact en temps réel sur votre ROI et votre pipeline de conversion.</p>
+        </div>
+      </aside>
+
+      <!-- ─── Results Area ─── -->
+      <section class="content">
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-dot kpi-dot--green"></div>
+            <p class="kpi-label">CA généré</p>
+            <p class="kpi-value kpi-value--green" id="kpi-revenue" data-value="0">0 €</p>
+            <p class="kpi-period">sur 90 jours</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-dot kpi-dot--blue"></div>
+            <p class="kpi-label">Budget dépensé</p>
+            <p class="kpi-value kpi-value--blue" id="kpi-budget" data-value="0">0 €</p>
+            <p class="kpi-period">sur 90 jours</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-dot kpi-dot--green"></div>
+            <p class="kpi-label">Gain net</p>
+            <p class="kpi-value kpi-value--green" id="kpi-netgain" data-value="0">0 €</p>
+            <p class="kpi-period">sur 90 jours</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-dot kpi-dot--amber"></div>
+            <p class="kpi-label">ROI</p>
+            <p class="kpi-value kpi-value--amber" id="kpi-roi" data-value="0">0 %</p>
+            <p class="kpi-period">sur 90 jours</p>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="card chart-section">
+          <div class="chart-header">
+            <p class="section-title">Évolution du chiffre d'affaires</p>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-dot legend-dot--green"></span>CA cumulé</span>
+              <span class="legend-item"><span class="legend-dot legend-dot--gray"></span>Budget cumulé</span>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="revenue-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Funnel -->
+        <div class="card funnel-section">
+          <p class="section-title">Pipeline de conversion</p>
+          <p class="funnel-subtitle">Estimation quotidienne de votre tunnel de vente</p>
+          <div class="funnel">
+            <div class="funnel-step">
+              <p class="funnel-value" id="funnel-budget">33,33 €</p>
+              <p class="funnel-label">Budget / jour</p>
+            </div>
+            <div class="funnel-connector" style="--flow-delay: 0s"></div>
+            <div class="funnel-step">
+              <p class="funnel-value" id="funnel-leads">2,8</p>
+              <p class="funnel-label">Leads / jour</p>
+            </div>
+            <div class="funnel-connector" style="--flow-delay: 0.25s"></div>
+            <div class="funnel-step">
+              <p class="funnel-value" id="funnel-shows">1,7</p>
+              <p class="funnel-label">RDV / jour</p>
+            </div>
+            <div class="funnel-connector" style="--flow-delay: 0.5s"></div>
+            <div class="funnel-step">
+              <p class="funnel-value" id="funnel-sales">0,33</p>
+              <p class="funnel-label">Ventes / jour</p>
+            </div>
+            <div class="funnel-connector" style="--flow-delay: 0.75s"></div>
+            <div class="funnel-step funnel-step--highlight">
+              <p class="funnel-value funnel-value--green" id="funnel-revenue">833 €</p>
+              <p class="funnel-label">CA / jour</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Period Table -->
+        <div class="card table-section">
+          <div class="table-section-header">
+            <p class="section-title">Détail par période</p>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Période</th>
+                  <th>Budget</th>
+                  <th>Leads</th>
+                  <th>RDV</th>
+                  <th>Ventes</th>
+                  <th>CA</th>
+                  <th>Gain net</th>
+                  <th>ROI</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    /* ═══════════════════════════════════════
+       STATE & CALCULATIONS
+       ═══════════════════════════════════════ */
+    const defaults = {
+      dailyBudget: 33,
+      costPerLead: 12,
+      showRate: 60,
+      closingRate: 20,
+      offerPrice: 2500
+    };
+
+    let state = { ...defaults };
+
+    // Try to restore from localStorage
+    try {
+      const saved = localStorage.getItem('adplanner-state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        state = { ...defaults, ...parsed };
+      }
+    } catch(e) {}
+
+    function compute(s) {
+      const dailyBudget = s.dailyBudget;
+      const leadsPerDay = s.costPerLead > 0 ? dailyBudget / s.costPerLead : 0;
+      const showsPerDay = leadsPerDay * (s.showRate / 100);
+      const salesPerDay = showsPerDay * (s.closingRate / 100);
+      const revenuePerDay = salesPerDay * s.offerPrice;
+
+      const periods = [7, 14, 30, 60, 90];
+      const breakdown = periods.map(days => {
+        const budget = dailyBudget * days;
+        const leads = leadsPerDay * days;
+        const shows = showsPerDay * days;
+        const sales = salesPerDay * days;
+        const revenue = revenuePerDay * days;
+        const netGain = revenue - budget;
+        const roi = budget > 0 ? (netGain / budget) * 100 : 0;
+        return { days, budget, leads, shows, sales, revenue, netGain, roi };
+      });
+
+      const r90 = breakdown[4];
+
+      return {
+        dailyBudget,
+        leadsPerDay,
+        showsPerDay,
+        salesPerDay,
+        revenuePerDay,
+        breakdown,
+        summary: {
+          revenue: r90.revenue,
+          budget: r90.budget,
+          netGain: r90.netGain,
+          roi: r90.roi
+        }
+      };
+    }
+
+    /* ═══════════════════════════════════════
+       FORMATTERS
+       ═══════════════════════════════════════ */
+    function fCurrency(n) {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency', currency: 'EUR',
+        maximumFractionDigits: 0, minimumFractionDigits: 0
+      }).format(n);
+    }
+
+    function fCurrencyDec(n) {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency', currency: 'EUR',
+        maximumFractionDigits: 2, minimumFractionDigits: 2
+      }).format(n);
+    }
+
+    function fNum(n, dec = 1) {
+      return new Intl.NumberFormat('fr-FR', {
+        maximumFractionDigits: dec, minimumFractionDigits: dec
+      }).format(n);
+    }
+
+    function fPercent(n) {
+      return new Intl.NumberFormat('fr-FR', {
+        maximumFractionDigits: 0
+      }).format(n) + ' %';
+    }
+
+    function fCompact(n) {
+      if (Math.abs(n) >= 1000000) return (n / 1000000).toFixed(1).replace('.', ',') + 'M €';
+      if (Math.abs(n) >= 1000) return (n / 1000).toFixed(0) + 'k €';
+      return n.toFixed(0) + ' €';
+    }
+
+    /* ═══════════════════════════════════════
+       ANIMATED NUMBER COUNTER
+       ═══════════════════════════════════════ */
+    const animations = {};
+
+    function animateValue(id, target, formatter) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const current = parseFloat(el.dataset.value || 0);
+      el.dataset.value = target;
+
+      if (animations[id]) cancelAnimationFrame(animations[id]);
+
+      const duration = 450;
+      const start = performance.now();
+
+      function step(ts) {
+        const progress = Math.min((ts - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const val = current + (target - current) * eased;
+        el.textContent = formatter(val);
+        if (progress < 1) {
+          animations[id] = requestAnimationFrame(step);
+        }
+      }
+
+      animations[id] = requestAnimationFrame(step);
+    }
+
+    /* ═══════════════════════════════════════
+       CHART
+       ═══════════════════════════════════════ */
+    let chart;
+
+    function initChart() {
+      const ctx = document.getElementById('revenue-chart').getContext('2d');
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, 310);
+      gradient.addColorStop(0, 'rgba(52, 211, 153, 0.14)');
+      gradient.addColorStop(0.7, 'rgba(52, 211, 153, 0.03)');
+      gradient.addColorStop(1, 'rgba(52, 211, 153, 0.0)');
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['0j', '7j', '14j', '30j', '60j', '90j'],
+          datasets: [
+            {
+              label: "Chiffre d'affaires",
+              data: [0, 0, 0, 0, 0, 0],
+              borderColor: '#34d399',
+              backgroundColor: gradient,
+              fill: true,
+              tension: 0.38,
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointBackgroundColor: '#34d399',
+              pointBorderColor: '#111219',
+              pointBorderWidth: 2.5,
+              pointHoverRadius: 7,
+              pointHoverBackgroundColor: '#34d399',
+              pointHoverBorderColor: '#fff',
+              pointHoverBorderWidth: 2,
+            },
+            {
+              label: 'Budget cumulé',
+              data: [0, 0, 0, 0, 0, 0],
+              borderColor: '#53566380',
+              borderDash: [6, 4],
+              fill: false,
+              tension: 0.1,
+              borderWidth: 1.5,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              pointHoverBackgroundColor: '#53566380',
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'index' },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#191a23',
+              borderColor: 'rgba(255,255,255,0.07)',
+              borderWidth: 1,
+              padding: { top: 10, bottom: 10, left: 14, right: 14 },
+              cornerRadius: 10,
+              titleFont: { family: 'Sora', size: 12, weight: '600' },
+              bodyFont: { family: 'Space Mono', size: 12 },
+              titleColor: '#e8eaef',
+              bodyColor: '#878a97',
+              bodySpacing: 6,
+              displayColors: true,
+              boxWidth: 8,
+              boxHeight: 8,
+              boxPadding: 6,
+              callbacks: {
+                label: (ctx) => ` ${ctx.dataset.label}: ${fCurrency(ctx.raw)}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.025)', drawBorder: false },
+              ticks: {
+                color: '#53566390',
+                font: { family: 'Space Mono', size: 11 },
+                padding: 8
+              },
+              border: { display: false }
+            },
+            y: {
+              grid: { color: 'rgba(255,255,255,0.025)', drawBorder: false },
+              ticks: {
+                color: '#53566390',
+                font: { family: 'Space Mono', size: 11 },
+                padding: 10,
+                maxTicksLimit: 6,
+                callback: (v) => fCompact(v)
+              },
+              border: { display: false },
+              beginAtZero: true
+            }
+          },
+          animation: { duration: 600, easing: 'easeOutQuart' }
+        }
+      });
+    }
+
+    /* ═══════════════════════════════════════
+       TABLE
+       ═══════════════════════════════════════ */
+    function updateTable(breakdown) {
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = breakdown.map((p, i) => {
+        const isNeg = p.netGain < 0;
+        return `<tr class="${isNeg ? 'negative' : ''}">
+          <td>${p.days} jours</td>
+          <td>${fCurrency(p.budget)}</td>
+          <td>${fNum(p.leads, 0)}</td>
+          <td>${fNum(p.shows, 0)}</td>
+          <td>${fNum(p.sales, 1)}</td>
+          <td>${fCurrency(p.revenue)}</td>
+          <td style="color: ${isNeg ? 'var(--red)' : 'var(--green)'}">${fCurrency(p.netGain)}</td>
+          <td><span class="roi-badge">${fPercent(p.roi)}</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    /* ═══════════════════════════════════════
+       SLIDER TRACK FILL
+       ═══════════════════════════════════════ */
+    function updateSliderTrack(slider) {
+      const pct = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+      slider.style.background = `linear-gradient(to right, #34d399 ${pct}%, #1f212b ${pct}%)`;
+    }
+
+    /* ═══════════════════════════════════════
+       UI UPDATE
+       ═══════════════════════════════════════ */
+    function updateUI() {
+      const d = compute(state);
+
+      // KPIs
+      animateValue('kpi-revenue', d.summary.revenue, fCurrency);
+      animateValue('kpi-budget', d.summary.budget, fCurrency);
+      animateValue('kpi-netgain', d.summary.netGain, fCurrency);
+      animateValue('kpi-roi', d.summary.roi, fPercent);
+
+      // Derived — budget sur 90 jours
+      document.getElementById('budget-90').textContent = fCurrency(d.dailyBudget * 90);
+
+      // Funnel
+      document.getElementById('funnel-budget').textContent = fCurrencyDec(d.dailyBudget);
+      document.getElementById('funnel-leads').textContent = fNum(d.leadsPerDay);
+      document.getElementById('funnel-shows').textContent = fNum(d.showsPerDay);
+      document.getElementById('funnel-sales').textContent = fNum(d.salesPerDay, 2);
+      document.getElementById('funnel-revenue').textContent = fCurrency(d.revenuePerDay);
+
+      // Chart
+      const chartRevenue = [0, ...d.breakdown.map(p => p.revenue)];
+      const chartBudget = [0, ...d.breakdown.map(p => p.budget)];
+      chart.data.datasets[0].data = chartRevenue;
+      chart.data.datasets[1].data = chartBudget;
+      chart.update('active');
+
+      // Table
+      updateTable(d.breakdown);
+
+      // Persist
+      try { localStorage.setItem('adplanner-state', JSON.stringify(state)); } catch(e) {}
+    }
+
+    /* ═══════════════════════════════════════
+       INPUT BINDINGS
+       ═══════════════════════════════════════ */
+    function setupInputs() {
+      const map = {
+        'daily-budget-input': 'dailyBudget',
+        'cost-per-lead': 'costPerLead',
+        'show-rate': 'showRate',
+        'closing-rate': 'closingRate',
+        'offer-price': 'offerPrice'
+      };
+
+      // Number inputs
+      Object.entries(map).forEach(([inputId, stateKey]) => {
+        const el = document.getElementById(inputId);
+        el.value = state[stateKey];
+        el.addEventListener('input', () => {
+          const val = parseFloat(el.value);
+          if (!isNaN(val) && val >= 0) {
+            state[stateKey] = val;
+            // Sync sliders
+            if (stateKey === 'showRate') {
+              const s = document.getElementById('show-rate-slider');
+              s.value = val;
+              updateSliderTrack(s);
+            }
+            if (stateKey === 'closingRate') {
+              const s = document.getElementById('closing-rate-slider');
+              s.value = val;
+              updateSliderTrack(s);
+            }
+            updateUI();
+          }
+        });
+      });
+
+      // Range sliders
+      const showSlider = document.getElementById('show-rate-slider');
+      const closingSlider = document.getElementById('closing-rate-slider');
+
+      showSlider.value = state.showRate;
+      closingSlider.value = state.closingRate;
+      updateSliderTrack(showSlider);
+      updateSliderTrack(closingSlider);
+
+      showSlider.addEventListener('input', () => {
+        state.showRate = parseFloat(showSlider.value);
+        document.getElementById('show-rate').value = state.showRate;
+        updateSliderTrack(showSlider);
+        updateUI();
+      });
+
+      closingSlider.addEventListener('input', () => {
+        state.closingRate = parseFloat(closingSlider.value);
+        document.getElementById('closing-rate').value = state.closingRate;
+        updateSliderTrack(closingSlider);
+        updateUI();
+      });
+
+      // Reset
+      document.getElementById('reset-btn').addEventListener('click', () => {
+        state = { ...defaults };
+        Object.entries(map).forEach(([inputId, stateKey]) => {
+          document.getElementById(inputId).value = state[stateKey];
+        });
+        showSlider.value = state.showRate;
+        closingSlider.value = state.closingRate;
+        updateSliderTrack(showSlider);
+        updateSliderTrack(closingSlider);
+        updateUI();
+      });
+    }
+
+    /* ═══════════════════════════════════════
+       INIT
+       ═══════════════════════════════════════ */
+    document.addEventListener('DOMContentLoaded', () => {
+      initChart();
+      setupInputs();
+      updateUI();
+    });
+  </script>
+</body>
+</html>

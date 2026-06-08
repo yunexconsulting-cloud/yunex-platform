@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yunex Consulting — Plateforme Cold Call</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg2: #111111;
+  --bg3: #1a1a1a;
+  --bg4: #222222;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #f0f0f0;
+  --text2: #888;
+  --text3: #555;
+  --accent: #e8ff47;
+  --accent2: #c8dc30;
+  --green: #4ade80;
+  --red: #f87171;
+  --orange: #fb923c;
+  --blue: #60a5fa;
+  --font: 'Syne', sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* LOGIN */
+#login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-logo{margin-bottom:40px;text-align:center}
+.login-logo-mark{width:64px;height:64px;background:var(--accent);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px}
+.login-logo-mark svg{width:38px;height:38px}
+.login-title{font-size:28px;font-weight:700;letter-spacing:-0.5px;color:var(--text)}
+.login-sub{font-size:13px;color:var(--text2);margin-top:4px;letter-spacing:0.05em;text-transform:uppercase}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:380px}
+.login-label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;display:block}
+.login-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:14px;color:var(--text);font-family:var(--mono);letter-spacing:0.1em;outline:none;transition:border-color 0.2s}
+.login-input:focus{border-color:var(--accent)}
+.login-btn{width:100%;margin-top:16px;padding:13px;background:var(--accent);border:none;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:#0a0a0a;cursor:pointer;letter-spacing:0.05em;transition:background 0.2s}
+.login-btn:hover{background:var(--accent2)}
+.login-error{color:var(--red);font-size:12px;margin-top:8px;text-align:center;display:none}
+
+/* APP */
+#app{display:none}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.logo-wrap{display:flex;align-items:center;gap:12px}
+.logo-sq{width:30px;height:30px;background:var(--accent);border-radius:5px;display:flex;align-items:center;justify-content:center}
+.logo-sq svg{width:18px;height:18px}
+.logo-name{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
+.logo-sub2{font-size:10px;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase}
+.nav{display:flex;gap:2px}
+.nav-btn{padding:7px 14px;border-radius:6px;border:none;background:transparent;color:var(--text2);font-family:var(--font);font-size:13px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px}
+.nav-btn:hover{color:var(--text);background:var(--bg3)}
+.nav-btn.active{background:var(--bg3);color:var(--accent);font-weight:500}
+.user-info{display:flex;align-items:center;gap:10px}
+.user-badge{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px}
+.user-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.logout-btn{background:transparent;border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--font)}
+.logout-btn:hover{border-color:var(--border2);color:var(--text)}
+
+/* CONTENT */
+.page{display:none;padding:24px;max-width:1200px;margin:0 auto}
+.page.active{display:block}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* METRICS */
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
+.metric-card.accent-card{border-color:rgba(232,255,71,0.3);background:rgba(232,255,71,0.05)}
+.metric-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px}
+.metric-value{font-size:32px;font-weight:700;color:var(--text);line-height:1;font-family:var(--mono)}
+.metric-value.accent{color:var(--accent)}
+.metric-sub{font-size:11px;color:var(--text3);margin-top:6px}
+.metric-bar{height:3px;background:var(--bg3);border-radius:2px;margin-top:12px;overflow:hidden}
+.metric-bar-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.5s}
+
+/* GRID LAYOUTS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-title{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
+
+/* BUTTONS */
+.btn{padding:9px 16px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--text);font-family:var(--font);font-size:13px;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--bg3);border-color:var(--border2)}
+.btn-accent{background:var(--accent);border-color:var(--accent);color:#0a0a0a;font-weight:600}
+.btn-accent:hover{background:var(--accent2);border-color:var(--accent2)}
+.btn-sm{padding:5px 10px;font-size:12px;border-radius:6px}
+.btn-danger{border-color:rgba(248,113,113,0.3);color:var(--red)}
+.btn-danger:hover{background:rgba(248,113,113,0.1)}
+
+/* FORMS */
+.form-row{margin-bottom:14px}
+.form-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:6px}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--text);font-family:var(--font);outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:rgba(232,255,71,0.4)}
+textarea.form-input{resize:vertical;min-height:80px;line-height:1.6}
+select.form-input{cursor:pointer}
+
+/* CALL BUTTONS */
+.call-status-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+.call-status-btn{padding:16px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.call-status-btn .status-icon{font-size:22px}
+.call-status-btn:hover{transform:translateY(-1px)}
+.call-status-btn.decro{border-color:rgba(74,222,128,0.4);color:var(--green)}
+.call-status-btn.decro:hover{background:rgba(74,222,128,0.08)}
+.call-status-btn.messa{border-color:rgba(96,165,250,0.4);color:var(--blue)}
+.call-status-btn.messa:hover{background:rgba(96,165,250,0.08)}
+.call-status-btn.faux{border-color:rgba(248,113,113,0.4);color:var(--red)}
+.call-status-btn.faux:hover{background:rgba(248,113,113,0.08)}
+.call-status-btn.rappel{border-color:rgba(251,146,60,0.4);color:var(--orange)}
+.call-status-btn.rappel:hover{background:rgba(251,146,60,0.08)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;font-family:var(--mono)}
+.badge-green{background:rgba(74,222,128,0.15);color:var(--green);border:1px solid rgba(74,222,128,0.25)}
+.badge-blue{background:rgba(96,165,250,0.15);color:var(--blue);border:1px solid rgba(96,165,250,0.25)}
+.badge-orange{background:rgba(251,146,60,0.15);color:var(--orange);border:1px solid rgba(251,146,60,0.25)}
+.badge-red{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
+.badge-gray{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
+.badge-accent{background:rgba(232,255,71,0.15);color:var(--accent);border:1px solid rgba(232,255,71,0.25)}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.data-table td{padding:12px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+.data-table tr:hover td{background:var(--bg3)}
+.data-table td:first-child{color:var(--text);font-weight:500}
+
+/* SCRIPT */
+.script-section{margin-bottom:12px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.script-header{padding:10px 14px;background:var(--bg3);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.script-header-left{display:flex;align-items:center;gap:10px}
+.script-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;padding:3px 8px;border-radius:4px}
+.script-tag.accroche{background:rgba(232,255,71,0.15);color:var(--accent)}
+.script-tag.qualif{background:rgba(96,165,250,0.15);color:var(--blue)}
+.script-tag.pitch{background:rgba(74,222,128,0.15);color:var(--green)}
+.script-tag.closing{background:rgba(251,146,60,0.15);color:var(--orange)}
+.script-tag.objection{background:rgba(248,113,113,0.15);color:var(--red)}
+.script-body{padding:14px;font-size:13px;line-height:1.7;color:var(--text2);display:none}
+.script-body.open{display:block}
+.script-body strong{color:var(--accent);font-weight:500}
+.objection-item{padding:10px 0;border-bottom:1px solid var(--border)}
+.objection-item:last-child{border-bottom:none}
+.objection-q{font-size:12px;color:var(--red);margin-bottom:6px;font-style:italic}
+.objection-a{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* CALLER CARDS */
+.caller-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;transition:border-color 0.2s}
+.caller-card:hover{border-color:var(--border2)}
+.caller-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.caller-avatar{width:40px;height:40px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--accent);border:1px solid rgba(232,255,71,0.2)}
+.caller-mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.mini-stat{background:var(--bg3);border-radius:6px;padding:8px;text-align:center}
+.mini-stat-val{font-size:16px;font-weight:700;color:var(--text);font-family:var(--mono)}
+.mini-stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px}
+.prog-bar{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin:6px 0 4px}
+.prog-fill{height:100%;border-radius:2px;background:var(--accent)}
+
+/* RDV */
+.rdv-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;transition:border-color 0.2s}
+.rdv-item:hover{border-color:var(--border2)}
+.rdv-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.rdv-company{font-size:14px;font-weight:600;color:var(--text)}
+.rdv-meta{font-size:12px;color:var(--text3);margin-top:3px}
+.rdv-note{font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg3);padding:10px 12px;border-radius:8px;margin-top:10px;border-left:2px solid rgba(232,255,71,0.3)}
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-size:18px;font-weight:700;color:var(--text3);width:28px;text-align:center;font-family:var(--mono)}
+.lb-rank.gold{color:var(--accent)}
+.lb-rank.silver{color:#9ca3af}
+.lb-rank.bronze{color:#b45309}
+.lb-info{flex:1}
+.lb-name{font-size:14px;font-weight:500;color:var(--text)}
+.lb-bar-wrap{flex:1;max-width:200px}
+
+/* LINK CARD */
+.link-card{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);transition:all 0.2s;margin-bottom:10px}
+.link-card:hover{border-color:rgba(232,255,71,0.3);background:rgba(232,255,71,0.04)}
+.link-icon{width:36px;height:36px;border-radius:8px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.link-info{flex:1}
+.link-title{font-size:13px;font-weight:500}
+.link-url{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px}
+
+/* MISSION */
+.mission-active{border:1px solid rgba(232,255,71,0.3);background:rgba(232,255,71,0.04);border-radius:12px;padding:16px;margin-bottom:16px}
+.mission-title{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:6px}
+.mission-text{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+
+/* HISTORY LOG */
+.log-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.log-item:last-child{border-bottom:none}
+.log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.log-time{font-size:11px;color:var(--text3);font-family:var(--mono);width:50px;flex-shrink:0}
+.log-text{font-size:12px;color:var(--text2)}
+
+/* TIMER */
+.timer-display{font-size:36px;font-weight:700;font-family:var(--mono);color:var(--accent);letter-spacing:0.05em;text-align:center;padding:20px 0}
+.timer-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;text-align:center;margin-top:-14px;margin-bottom:16px}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px 18px;font-size:13px;color:var(--text);display:none;z-index:9999;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:slideIn 0.3s ease}
+#toast.accent-toast{border-color:rgba(232,255,71,0.4);color:var(--accent)}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* SECTION HEADER */
+.section-divider{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text3);padding:6px 0;margin:16px 0 10px;border-top:1px solid var(--border)}
+
+/* MOBILE */
+@media(max-width:768px){
+  .metrics-grid{grid-template-columns:repeat(2,1fr)}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .nav-btn span{display:none}
+  .topbar{padding:0 14px}
+  .page{padding:14px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-logo">
+    <div class="login-logo-mark">
+      <svg viewBox="0 0 38 38" fill="none">
+        <path d="M6 6H20L32 32H18L6 6Z" fill="#0a0a0a"/>
+        <path d="M20 6H32V20C32 26.627 26.627 32 20 32C13.373 32 20 26.627 20 20V6Z" fill="#0a0a0a"/>
+      </svg>
+    </div>
+    <div class="login-title">Yunex Consulting</div>
+    <div class="login-sub">Cold Call Platform</div>
+  </div>
+  <div class="login-card">
+    <label class="login-label">Code d'accès</label>
+    <input type="text" class="login-input" id="access-code" placeholder="Ex: AMINE2026" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-error" id="login-error">Code incorrect. Contactez votre manager.</div>
+    <button class="login-btn" onclick="doLogin()">Accéder à la plateforme →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="logo-wrap">
+      <div class="logo-sq">
+        <svg viewBox="0 0 18 18" fill="none">
+          <path d="M2 2H9L16 16H9L2 2Z" fill="#0a0a0a"/>
+          <path d="M9 2H16V9C16 12.866 12.866 16 9 16C5.134 16 9 12.866 9 9V2Z" fill="#0a0a0a"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-name">Yunex Consulting</div>
+        <div class="logo-sub2">Cold Call Platform</div>
+      </div>
+    </div>
+    <div class="nav" id="main-nav">
+      <button class="nav-btn active" onclick="showPage('dashboard')" data-page="dashboard"><span>Dashboard</span></button>
+      <button class="nav-btn" onclick="showPage('workspace')" data-page="workspace" id="nav-workspace"><span>Mon espace</span></button>
+      <button class="nav-btn" onclick="showPage('rdvs')" data-page="rdvs"><span>Rendez-vous</span></button>
+      <button class="nav-btn" onclick="showPage('team')" data-page="team" id="nav-team"><span>Équipe</span></button>
+    </div>
+    <div class="user-info">
+      <div class="user-badge"><div class="user-dot"></div><span id="user-display">—</span></div>
+      <button class="logout-btn" onclick="doLogout()">Déco</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (MANAGER) -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
+      <div class="page-title">Vue d'ensemble</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm" onclick="exportCSV()">↓ Export CSV</button>
+        <button class="btn btn-sm btn-accent" onclick="openMissionModal()">+ Envoyer mission</button>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Appels passés</div>
+        <div class="metric-value" id="d-appels">0</div>
+        <div class="metric-sub">aujourd'hui (équipe)</div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="d-appels-bar" style="width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Décroché</div>
+        <div class="metric-value" id="d-decro">0</div>
+        <div class="metric-sub" id="d-decro-rate">–% de taux</div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="d-decro-bar" style="width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">RDV pris</div>
+        <div class="metric-value" id="d-rdv">0</div>
+        <div class="metric-sub" id="d-rdv-rate">–% conversion</div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="d-rdv-bar" style="width:0%"></div></div>
+      </div>
+      <div class="metric-card accent-card">
+        <div class="metric-label">Taux global</div>
+        <div class="metric-value accent" id="d-taux">0%</div>
+        <div class="metric-sub">appels → RDV signés</div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="d-taux-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🏆 Leaderboard — cette semaine</div>
+        <div id="leaderboard-list"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Derniers RDV déclarés</div>
+        <div id="dash-rdv-list"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📡 Activité en temps réel</div>
+      <div id="activity-log"></div>
+    </div>
+  </div>
+
+  <!-- WORKSPACE (CALLER) -->
+  <div class="page" id="page-workspace">
+    <div class="page-header">
+      <div class="page-title" id="ws-title">Mon espace de travail</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:12px;color:var(--text3)">Session</div>
+        <div id="timer-badge" style="font-family:var(--mono);font-size:13px;color:var(--accent);background:rgba(232,255,71,0.1);border:1px solid rgba(232,255,71,0.2);padding:4px 10px;border-radius:6px">00:00:00</div>
+      </div>
+    </div>
+
+    <div class="metrics-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="metric-card">
+        <div class="metric-label">Appels</div>
+        <div class="metric-value" id="ws-appels">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Décroché</div>
+        <div class="metric-value" id="ws-decro">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">RDV pris</div>
+        <div class="metric-value" id="ws-rdv">0</div>
+      </div>
+      <div class="metric-card accent-card">
+        <div class="metric-label">Conversion</div>
+        <div class="metric-value accent" id="ws-taux">0%</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <!-- MISSION -->
+        <div id="ws-mission-block" style="display:none;margin-bottom:16px">
+          <div class="mission-active">
+            <div class="mission-title">🎯 Mission active</div>
+            <div class="mission-text" id="ws-mission-text">—</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+              <div style="font-size:11px;color:var(--text3)">Progression</div>
+              <div style="font-size:11px;color:var(--accent);font-family:var(--mono)" id="ws-mission-prog">0 / 0 appels</div>
+            </div>
+            <div class="prog-bar" style="height:5px"><div class="prog-fill" id="ws-mission-bar" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <!-- LOG APPEL -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">📞 Enregistrer un appel</div>
+          <div class="form-row">
+            <label class="form-label">Entreprise contactée</label>
+            <input type="text" class="form-input" id="call-company" placeholder="Ex: SolarTech Lyon SARL">
+          </div>
+          <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Résultat de l'appel</div>
+          <div class="call-status-grid">
+            <button class="call-status-btn decro" onclick="logCall('decroché')"><span class="status-icon">✅</span>Décroché</button>
+            <button class="call-status-btn messa" onclick="logCall('messagerie')"><span class="status-icon">📩</span>Messagerie</button>
+            <button class="call-status-btn faux" onclick="logCall('faux numéro')"><span class="status-icon">❌</span>Faux numéro</button>
+            <button class="call-status-btn rappel" onclick="logCall('rappel prévu')"><span class="status-icon">🔄</span>Rappel prévu</button>
+          </div>
+        </div>
+
+        <!-- TOOLS -->
+        <div class="card">
+          <div class="card-title">🛠 Outils</div>
+          <a href="https://yunex.youcanbook.me" target="_blank" class="link-card">
+            <div class="link-icon">📅</div>
+            <div class="link-info">
+              <div class="link-title">Prendre un RDV</div>
+              <div class="link-url">yunex.youcanbook.me</div>
+            </div>
+            <span style="color:var(--text3);font-size:13px">↗</span>
+          </a>
+          <a href="https://coldcaller.pro" target="_blank" class="link-card">
+            <div class="link-icon">📞</div>
+            <div class="link-info">
+              <div class="link-title">Lancer les appels</div>
+              <div class="link-url">coldcaller.pro</div>
+            </div>
+            <span style="color:var(--text3);font-size:13px">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <!-- SCRIPT -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">📄 Script — Panneaux photovoltaïques</div>
+          <div class="script-section">
+            <div class="script-header" onclick="toggleScript(this)">
+              <div class="script-header-left"><span class="script-tag accroche">Accroche</span><span style="font-size:13px;color:var(--text2)">Introduction & briseur de glace</span></div>
+              <span style="color:var(--text3);font-size:12px">▼</span>
+            </div>
+            <div class="script-body">Bonjour Monsieur/Madame ***, <strong>[Prénom]</strong> société <strong>Yunex Consulting</strong>. Vous allez bien ?<br><br>Je vous rassure, on ne se connaît pas. L'idée de mon appel est simple — je travaille avec plusieurs installateurs de panneaux photovoltaïques, au niveau de l'acquisition client.<br><br>Avant de vous expliquer pourquoi je vous appelle : <strong>est-ce que c'est un secteur que vous développez au sein de votre société ?</strong></div>
+          </div>
+          <div class="script-section">
+            <div class="script-header" onclick="toggleScript(this)">
+              <div class="script-header-left"><span class="script-tag qualif">Qualification</span><span style="font-size:13px;color:var(--text2)">Comprendre le prospect</span></div>
+              <span style="color:var(--text3);font-size:12px">▼</span>
+            </div>
+            <div class="script-body">Je vous appelle parce qu'actuellement on cherche, dans votre secteur, <strong>une seule entreprise</strong> qui installe des panneaux photovoltaïques, qui veut développer cette activité, et avec qui on pourrait potentiellement travailler.<br><br>→ En moyenne, vous êtes autour de combien de chantiers PV signés par mois actuellement ?<br><br>→ Sans vous surcharger, vous pourriez monter jusqu'à combien ?</div>
+          </div>
+          <div class="script-section">
+            <div class="script-header" onclick="toggleScript(this)">
+              <div class="script-header-left"><span class="script-tag pitch">Pitch</span><span style="font-size:13px;color:var(--text2)">La proposition de valeur</span></div>
+              <span style="color:var(--text3);font-size:12px">▼</span>
+            </div>
+            <div class="script-body">De notre côté, on met en place un <strong>système d'acquisition locale</strong> via Facebook et Instagram — qui cible les propriétaires souhaitant installer des panneaux photovoltaïques dans votre zone.<br><br>Ils laissent directement leurs coordonnées pour être rappelés et établir un devis. Tout ça sur mesure par rapport à vos critères et votre zone d'intervention.</div>
+          </div>
+          <div class="script-section">
+            <div class="script-header" onclick="toggleScript(this)">
+              <div class="script-header-left"><span class="script-tag closing">Closing</span><span style="font-size:13px;color:var(--text2)">Prise de rendez-vous</span></div>
+              <span style="color:var(--text3);font-size:12px">▼</span>
+            </div>
+            <div class="script-body">Si je vous apporte entre <strong>3 et 5 chantiers signés par mois</strong>, vous pouvez les absorber ?<br><br>Dans ce cas-là, le plus simple c'est qu'on prenne <strong>20 minutes en visio</strong>. Je vous montre exactement comment ça fonctionne, les chiffres, j'essaie de comprendre vos objectifs — et on voit si ça a du sens.<br><br><strong>Vous êtes plutôt disponible demain ou après-demain ?</strong></div>
+          </div>
+          <div class="script-section">
+            <div class="script-header" onclick="toggleScript(this)">
+              <div class="script-header-left"><span class="script-tag objection">Objections</span><span style="font-size:13px;color:var(--text2)">5 réponses prêtes</span></div>
+              <span style="color:var(--text3);font-size:12px">▼</span>
+            </div>
+            <div class="script-body">
+              <div class="objection-item">
+                <div class="objection-q">« Vous répondez à une question par une question ? »</div>
+                <div class="objection-a">Oui, parce que je veux pas vous faire perdre votre temps. Si l'installation PV c'est pas votre priorité, je vous libère tout de suite. Mais si c'est un axe que vous développez, j'ai quelque chose de concret à vous montrer.</div>
+              </div>
+              <div class="objection-item">
+                <div class="objection-q">« J'ai déjà quelqu'un pour ça »</div>
+                <div class="objection-a">Très bien, c'est rassurant. La seule question c'est : est-ce que vous êtes satisfait des résultats que vous avez en ce moment ? Parce que notre système garantit 3 à 5 chantiers signés, pas juste des leads.</div>
+              </div>
+              <div class="objection-item">
+                <div class="objection-q">« C'est pas le bon moment »</div>
+                <div class="objection-a">Je comprends totalement. C'est pour ça que je vous propose juste 20 minutes — pas pour signer quoi que ce soit, juste pour voir si ça peut avoir du sens dans 1 ou 2 mois. Ça vous engage à rien.</div>
+              </div>
+              <div class="objection-item">
+                <div class="objection-q">« Ça coûte combien ? »</div>
+                <div class="objection-a">C'est précisément ce qu'on voit en visio, parce que c'est sur mesure selon votre zone et vos objectifs. Ce que je peux vous dire c'est que la structure est à la performance — vous payez des résultats, pas de la promesse.</div>
+              </div>
+              <div class="objection-item">
+                <div class="objection-q">« Envoyez-moi un mail »</div>
+                <div class="objection-a">Bien sûr, je peux faire ça. Mais honnêtement, un mail ça n'explique pas en 2 minutes ce qu'une visio montre en détail. On prend 20 minutes, vous voyez les chiffres en live — si c'est pas pour vous, je disparais. Demain ou après-demain ?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DECLARE RDV -->
+        <div class="card">
+          <div class="card-title">📆 Déclarer un RDV</div>
+          <div class="form-row">
+            <label class="form-label">Entreprise</label>
+            <input type="text" class="form-input" id="rdv-company" placeholder="SolarTech Lyon SARL">
+          </div>
+          <div class="form-row">
+            <label class="form-label">Contact (nom + poste)</label>
+            <input type="text" class="form-input" id="rdv-contact" placeholder="M. Dupont — Gérant">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="form-row">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-input" id="rdv-date">
+            </div>
+            <div class="form-row">
+              <label class="form-label">Heure</label>
+              <input type="time" class="form-input" id="rdv-time">
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Notes détaillées</label>
+            <textarea class="form-input" id="rdv-notes" placeholder="Ex: Gérant intéressé, 4 chantiers PV/mois actuellement, veut monter à 8. Pas de prestataire actuellement. Très réceptif à la garantie résultats."></textarea>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Statut</label>
+            <select class="form-input" id="rdv-status">
+              <option value="confirmé">Confirmé</option>
+              <option value="a_confirmer">À confirmer</option>
+              <option value="en_attente">En attente</option>
+            </select>
+          </div>
+          <button class="btn btn-accent" onclick="declareRdv()" style="width:100%">✓ Enregistrer le RDV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALL HISTORY -->
+    <div class="card">
+      <div class="card-title">📊 Historique des appels — session en cours</div>
+      <div id="call-history-list" style="max-height:250px;overflow-y:auto">
+        <div style="color:var(--text3);font-size:13px;padding:16px 0;text-align:center">Aucun appel enregistré pour cette session.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RDV PAGE -->
+  <div class="page" id="page-rdvs">
+    <div class="page-header">
+      <div class="page-title">Rendez-vous</div>
+      <div style="display:flex;gap:8px">
+        <select class="form-input" id="rdv-filter-caller" style="width:auto;font-size:13px;padding:6px 10px" onchange="renderRdvPage()">
+          <option value="">Tous les callers</option>
+        </select>
+        <select class="form-input" id="rdv-filter-status" style="width:auto;font-size:13px;padding:6px 10px" onchange="renderRdvPage()">
+          <option value="">Tous statuts</option>
+          <option value="confirmé">Confirmé</option>
+          <option value="a_confirmer">À confirmer</option>
+          <option value="en_attente">En attente</option>
+        </select>
+        <button class="btn btn-sm" onclick="exportCSV()">↓ CSV</button>
+      </div>
+    </div>
+    <div id="rdv-page-list"></div>
+  </div>
+
+  <!-- TEAM PAGE -->
+  <div class="page" id="page-team">
+    <div class="page-header">
+      <div class="page-title">Gestion de l'équipe</div>
+      <button class="btn btn-accent" onclick="toggleAddCaller()">+ Créer un accès</button>
+    </div>
+    <div class="card" id="add-caller-card" style="display:none;margin-bottom:16px">
+      <div class="card-title">Nouveau cold caller</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="form-row">
+          <label class="form-label">Prénom Nom</label>
+          <input type="text" class="form-input" id="new-name" placeholder="Amine M.">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Code d'accès</label>
+          <input type="text" class="form-input" id="new-code" placeholder="AMINE2026" style="font-family:var(--mono);letter-spacing:0.05em">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Rôle</label>
+          <select class="form-input" id="new-role">
+            <option value="caller">Cold Caller</option>
+            <option value="manager">Manager</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-accent" onclick="addCaller()">✓ Créer l'accès</button>
+        <button class="btn" onclick="toggleAddCaller()">Annuler</button>
+      </div>
+    </div>
+    <div class="grid-3" id="team-grid"></div>
+  </div>
+</div>
+
+<!-- MISSION MODAL -->
+<div id="mission-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:28px;width:100%;max-width:480px;margin:20px">
+    <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:20px">Envoyer une mission</div>
+    <div class="form-row">
+      <label class="form-label">Assigner à</label>
+      <select class="form-input" id="mission-to">
+        <option value="all">Toute l'équipe</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Objectif d'appels</label>
+      <input type="number" class="form-input" id="mission-target" placeholder="Ex: 50" value="50">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Instructions</label>
+      <textarea class="form-input" id="mission-text" placeholder="Cibler les installateurs RGE en Rhône-Alpes. Priorité aux sociétés de +5 salariés. Mettre en avant l'offre 3-5 chantiers garantis en 90 jours." style="min-height:100px"></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-accent" onclick="sendMission()" style="flex:1">✓ Envoyer la mission</button>
+      <button class="btn" onclick="closeMissionModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─── DATA STORE ───────────────────────────────────────
+const STORE_KEY = 'yunex_v2';
+function loadData(){
+  try{return JSON.parse(localStorage.getItem(STORE_KEY))||defaultData()}catch(e){return defaultData()}
+}
+function saveData(d){localStorage.setItem(STORE_KEY,JSON.stringify(d))}
+function defaultData(){
+  return {
+    users:[
+      {code:'YUNEX-ADMIN-2026',name:'Sotayo',role:'manager'},
+      {code:'KAIS-YNX-2026',name:'Kais',role:'caller'},
+      {code:'MATHIS-YNX-2026',name:'Mathis',role:'caller'},
+      {code:'MOHAMED-YNX-2026',name:'Mohamed',role:'caller'},
+      {code:'YANIS-YNX-2026',name:'Yanis',role:'caller'}
+    ],
+    calls:[],
+    rdvs:[],
+    missions:[],
+    activity:[]
+  }
+}
+
+let DB = loadData();
+let currentUser = null;
+let sessionStart = null;
+let timerInterval = null;
+
+// ─── AUTH ──────────────────────────────────────────────
+function doLogin(){
+  const code = document.getElementById('access-code').value.trim().toUpperCase();
+  const user = DB.users.find(u=>u.code===code);
+  if(!user){
+    document.getElementById('login-error').style.display='block';
+    return;
+  }
+  currentUser = user;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('user-display').textContent = user.name + (user.role==='manager'?' · Manager':'');
+  if(user.role==='manager'){
+    document.getElementById('nav-workspace').style.display='none';
+    showPage('dashboard');
+  } else {
+    document.getElementById('nav-team').style.display='none';
+    document.getElementById('page-dashboard').querySelector('.page-header').querySelector('button:last-child').style.display='none';
+    showPage('workspace');
+    document.getElementById('ws-title').textContent = 'Espace de travail — '+user.name;
+    startTimer();
+    loadCallerWorkspace();
+  }
+  renderDashboard();
+  renderTeam();
+  renderRdvPage();
+  updateMissionSelect();
+}
+function doLogout(){
+  currentUser=null;
+  if(timerInterval)clearInterval(timerInterval);
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('access-code').value='';
+  document.getElementById('login-error').style.display='none';
+}
+
+// ─── NAVIGATION ────────────────────────────────────────
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelector('[data-page="'+id+'"]').classList.add('active');
+  if(id==='dashboard')renderDashboard();
+  if(id==='rdvs')renderRdvPage();
+  if(id==='team')renderTeam();
+}
+
+// ─── TIMER ─────────────────────────────────────────────
+function startTimer(){
+  sessionStart = Date.now();
+  timerInterval = setInterval(()=>{
+    const s = Math.floor((Date.now()-sessionStart)/1000);
+    const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sc=s%60;
+    document.getElementById('timer-badge').textContent =
+      String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');
+  },1000);
+}
+
+// ─── CALLS ─────────────────────────────────────────────
+function logCall(status){
+  const company = document.getElementById('call-company').value.trim()||'—';
+  const call = {
+    id: Date.now(),
+    caller: currentUser.name,
+    callerCode: currentUser.code,
+    company,
+    status,
+    time: new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),
+    date: new Date().toLocaleDateString('fr-FR')
+  };
+  DB.calls.push(call);
+  addActivity(currentUser.name+' — '+status+(company!=='—'?' ('+company+')':''));
+  saveData(DB);
+  document.getElementById('call-company').value='';
+  updateCallerStats();
+  renderCallHistory();
+  updateMissionProgress();
+  toast('Appel enregistré : '+status,'accent');
+}
+
+function updateCallerStats(){
+  const myCalls = DB.calls.filter(c=>c.callerCode===currentUser.code);
+  const today = new Date().toLocaleDateString('fr-FR');
+  const todayCalls = myCalls.filter(c=>c.date===today);
+  const decro = todayCalls.filter(c=>c.status==='décroché').length;
+  const rdvs = DB.rdvs.filter(r=>r.callerCode===currentUser.code&&r.date_created===today).length;
+  const taux = decro>0?Math.round(rdvs/decro*100):0;
+  document.getElementById('ws-appels').textContent = todayCalls.length;
+  document.getElementById('ws-decro').textContent = decro;
+  document.getElementById('ws-rdv').textContent = rdvs;
+  document.getElementById('ws-taux').textContent = taux+'%';
+}
+
+function renderCallHistory(){
+  const today = new Date().toLocaleDateString('fr-FR');
+  const myCalls = DB.calls.filter(c=>c.callerCode===currentUser.code&&c.date===today).reverse().slice(0,20);
+  const el = document.getElementById('call-history-list');
+  if(!myCalls.length){
+    el.innerHTML='<div style="color:var(--text3);font-size:13px;padding:16px 0;text-align:center">Aucun appel enregistré pour cette session.</div>';
+    return;
+  }
+  const colors={décroché:'var(--green)',messagerie:'var(--blue)','faux numéro':'var(--red)','rappel prévu':'var(--orange)'};
+  el.innerHTML = myCalls.map(c=>`
+    <div class="log-item">
+      <div class="log-dot" style="background:${colors[c.status]||'var(--text3)'}"></div>
+      <div class="log-time">${c.time}</div>
+      <div class="log-text"><strong style="color:var(--text)">${c.company}</strong> — ${c.status}</div>
+    </div>
+  `).join('');
+}
+
+// ─── RDV ───────────────────────────────────────────────
+function declareRdv(){
+  const co = document.getElementById('rdv-company').value.trim();
+  const ct = document.getElementById('rdv-contact').value.trim();
+  if(!co||!ct){toast('Entreprise et contact requis','red');return}
+  const rdv = {
+    id: Date.now(),
+    company: co,
+    contact: ct,
+    date: document.getElementById('rdv-date').value,
+    time: document.getElementById('rdv-time').value,
+    notes: document.getElementById('rdv-notes').value,
+    status: document.getElementById('rdv-status').value,
+    caller: currentUser.name,
+    callerCode: currentUser.code,
+    date_created: new Date().toLocaleDateString('fr-FR')
+  };
+  DB.rdvs.push(rdv);
+  addActivity(currentUser.name+' a pris un RDV — '+co);
+  saveData(DB);
+  ['rdv-company','rdv-contact','rdv-date','rdv-time','rdv-notes'].forEach(id=>document.getElementById(id).value='');
+  updateCallerStats();
+  toast('RDV enregistré — '+co,'accent');
+}
+
+function renderRdvPage(){
+  const filterCaller = document.getElementById('rdv-filter-caller')?.value||'';
+  const filterStatus = document.getElementById('rdv-filter-status')?.value||'';
+  let rdvs = [...DB.rdvs].reverse();
+  if(filterCaller) rdvs = rdvs.filter(r=>r.caller===filterCaller);
+  if(filterStatus) rdvs = rdvs.filter(r=>r.status===filterStatus);
+  if(currentUser&&currentUser.role==='caller') rdvs = rdvs.filter(r=>r.callerCode===currentUser.code);
+  const el = document.getElementById('rdv-page-list');
+  if(!rdvs.length){
+    el.innerHTML='<div style="color:var(--text3);font-size:13px;padding:32px 0;text-align:center">Aucun rendez-vous trouvé.</div>';
+    return;
+  }
+  const badges={confirmé:'badge-green',a_confirmer:'badge-blue',en_attente:'badge-orange'};
+  const labels={confirmé:'Confirmé',a_confirmer:'À confirmer',en_attente:'En attente'};
+  el.innerHTML = rdvs.map(r=>`
+    <div class="rdv-item">
+      <div class="rdv-top">
+        <div>
+          <div class="rdv-company">${r.company}</div>
+          <div class="rdv-meta">${r.contact} · ${r.date||'—'} ${r.time||''} · ${r.caller}</div>
+        </div>
+        <span class="badge ${badges[r.status]||'badge-gray'}">${labels[r.status]||r.status}</span>
+      </div>
+      ${r.notes?`<div class="rdv-note">${r.notes}</div>`:''}
+    </div>
+  `).join('');
+}
+
+// ─── DASHBOARD ─────────────────────────────────────────
+function renderDashboard(){
+  const today = new Date().toLocaleDateString('fr-FR');
+  const todayCalls = DB.calls.filter(c=>c.date===today);
+  const todayDecro = todayCalls.filter(c=>c.status==='décroché').length;
+  const todayRdv = DB.rdvs.filter(r=>r.date_created===today).length;
+  const total = todayCalls.length;
+  const taux = total>0?Math.round(todayRdv/total*100):0;
+  const decroRate = total>0?Math.round(todayDecro/total*100):0;
+  const rdvRate = todayDecro>0?Math.round(todayRdv/todayDecro*100):0;
+  document.getElementById('d-appels').textContent = total;
+  document.getElementById('d-decro').textContent = todayDecro;
+  document.getElementById('d-decro-rate').textContent = decroRate+'% de taux';
+  document.getElementById('d-rdv').textContent = todayRdv;
+  document.getElementById('d-rdv-rate').textContent = rdvRate+'% conversion';
+  document.getElementById('d-taux').textContent = taux+'%';
+  document.getElementById('d-appels-bar').style.width = Math.min(total,100)+'%';
+  document.getElementById('d-decro-bar').style.width = decroRate+'%';
+  document.getElementById('d-rdv-bar').style.width = Math.min(todayRdv*20,100)+'%';
+  document.getElementById('d-taux-bar').style.width = taux+'%';
+  renderLeaderboard();
+  renderDashRdv();
+  renderActivity();
+}
+
+function renderLeaderboard(){
+  const callers = DB.users.filter(u=>u.role==='caller');
+  const ranked = callers.map(u=>{
+    const today = new Date().toLocaleDateString('fr-FR');
+    const calls = DB.calls.filter(c=>c.callerCode===u.code&&c.date===today);
+    const decro = calls.filter(c=>c.status==='décroché').length;
+    const rdvs = DB.rdvs.filter(r=>r.callerCode===u.code&&r.date_created===today).length;
+    return {...u, calls:calls.length, decro, rdvs, score: rdvs*10+decro};
+  }).sort((a,b)=>b.score-a.score);
+  const medals=['gold','silver','bronze'];
+  const rankNums=['1','2','3'];
+  const el = document.getElementById('leaderboard-list');
+  if(!ranked.length){el.innerHTML='<div style="color:var(--text3);font-size:13px;padding:12px 0">Aucun caller configuré.</div>';return}
+  el.innerHTML = ranked.map((u,i)=>{
+    const pct = ranked[0].calls>0?Math.round(u.calls/ranked[0].calls*100):0;
+    return `<div class="lb-row">
+      <div class="lb-rank ${medals[i]||''}">${rankNums[i]||i+1}</div>
+      <div class="caller-avatar" style="width:32px;height:32px;font-size:11px">${u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
+      <div class="lb-info">
+        <div class="lb-name">${u.name}</div>
+        <div style="font-size:11px;color:var(--text3)">${u.calls} appels · ${u.decro} décroché · ${u.rdvs} RDV</div>
+      </div>
+      <div class="lb-bar-wrap">
+        <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>`}).join('');
+}
+
+function renderDashRdv(){
+  const recent = [...DB.rdvs].reverse().slice(0,4);
+  const el = document.getElementById('dash-rdv-list');
+  if(!recent.length){el.innerHTML='<div style="color:var(--text3);font-size:13px;padding:12px 0">Aucun RDV déclaré.</div>';return}
+  const badges={confirmé:'badge-green',a_confirmer:'badge-blue',en_attente:'badge-orange'};
+  const labels={confirmé:'Confirmé',a_confirmer:'À confirmer',en_attente:'En attente'};
+  el.innerHTML = recent.map(r=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--text)">${r.company}</div>
+        <div style="font-size:11px;color:var(--text3)">${r.date||'—'} · ${r.caller}</div>
+      </div>
+      <span class="badge ${badges[r.status]||'badge-gray'}">${labels[r.status]||r.status}</span>
+    </div>
+  `).join('');
+}
+
+function renderActivity(){
+  const el = document.getElementById('activity-log');
+  const items = [...(DB.activity||[])].reverse().slice(0,10);
+  if(!items.length){el.innerHTML='<div style="color:var(--text3);font-size:13px;padding:12px 0">Aucune activité.</div>';return}
+  el.innerHTML = items.map(a=>`
+    <div class="log-item">
+      <div class="log-dot" style="background:var(--accent)"></div>
+      <div class="log-time">${a.time}</div>
+      <div class="log-text">${a.text}</div>
+    </div>
+  `).join('');
+}
+
+function addActivity(text){
+  if(!DB.activity)DB.activity=[];
+  DB.activity.push({text,time:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})});
+  if(DB.activity.length>50)DB.activity.shift();
+}
+
+// ─── TEAM ──────────────────────────────────────────────
+function renderTeam(){
+  const callers = DB.users.filter(u=>u.role==='caller');
+  const el = document.getElementById('team-grid');
+  const today = new Date().toLocaleDateString('fr-FR');
+  el.innerHTML = callers.map(u=>{
+    const calls = DB.calls.filter(c=>c.callerCode===u.code&&c.date===today);
+    const decro = calls.filter(c=>c.status==='décroché').length;
+    const rdvs = DB.rdvs.filter(r=>r.callerCode===u.code&&r.date_created===today).length;
+    const conv = decro>0?Math.round(rdvs/decro*100):0;
+    const ini = u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<div class="caller-card">
+      <div class="caller-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="caller-avatar">${ini}</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">${u.name}</div>
+            <div style="font-size:11px;font-family:var(--mono);color:var(--text3)">${u.code}</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-danger" onclick="removeCaller('${u.code}')">✕</button>
+      </div>
+      <div class="caller-mini-stats">
+        <div class="mini-stat"><div class="mini-stat-val">${calls.length}</div><div class="mini-stat-lbl">Appels</div></div>
+        <div class="mini-stat"><div class="mini-stat-val">${decro}</div><div class="mini-stat-lbl">Décroché</div></div>
+        <div class="mini-stat"><div class="mini-stat-val">${rdvs}</div><div class="mini-stat-lbl">RDV</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:2px;display:flex;justify-content:space-between">
+        <span>Taux conv.</span><span style="color:var(--accent);font-family:var(--mono)">${conv}%</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${conv}%"></div></div>
+      <div style="margin-top:12px">
+        <button class="btn btn-sm btn-accent" onclick="quickMission('${u.code}','${u.name}')" style="width:100%">+ Envoyer mission</button>
+      </div>
+    </div>`}).join('');
+  // Update RDV filter
+  const sel = document.getElementById('rdv-filter-caller');
+  if(sel){
+    const current = sel.value;
+    sel.innerHTML = '<option value="">Tous les callers</option>'+
+      callers.map(u=>`<option value="${u.name}" ${current===u.name?'selected':''}>${u.name}</option>`).join('');
+  }
+}
+
+function toggleAddCaller(){
+  const c = document.getElementById('add-caller-card');
+  c.style.display = c.style.display==='none'?'block':'none';
+}
+
+function addCaller(){
+  const name = document.getElementById('new-name').value.trim();
+  const code = document.getElementById('new-code').value.trim().toUpperCase();
+  const role = document.getElementById('new-role').value;
+  if(!name||!code){toast('Nom et code requis','red');return}
+  if(DB.users.find(u=>u.code===code)){toast('Code déjà utilisé','red');return}
+  DB.users.push({code,name,role});
+  saveData(DB);
+  renderTeam();
+  updateMissionSelect();
+  ['new-name','new-code'].forEach(id=>document.getElementById(id).value='');
+  toggleAddCaller();
+  toast('Accès créé pour '+name,'accent');
+}
+
+function removeCaller(code){
+  if(!confirm('Supprimer cet accès ?'))return;
+  DB.users = DB.users.filter(u=>u.code!==code);
+  saveData(DB);
+  renderTeam();
+  toast('Accès supprimé','red');
+}
+
+// ─── MISSIONS ──────────────────────────────────────────
+function openMissionModal(){
+  updateMissionSelect();
+  document.getElementById('mission-modal').style.display='flex';
+}
+function closeMissionModal(){document.getElementById('mission-modal').style.display='none'}
+
+function updateMissionSelect(){
+  const sel = document.getElementById('mission-to');
+  if(!sel)return;
+  const callers = DB.users.filter(u=>u.role==='caller');
+  sel.innerHTML = '<option value="all">Toute l\'équipe</option>'+
+    callers.map(u=>`<option value="${u.code}">${u.name}</option>`).join('');
+}
+
+function sendMission(){
+  const to = document.getElementById('mission-to').value;
+  const target = parseInt(document.getElementById('mission-target').value)||50;
+  const text = document.getElementById('mission-text').value.trim();
+  if(!text){toast('Ajoute des instructions','red');return}
+  const mission = {id:Date.now(),to,target,text,date:new Date().toLocaleDateString('fr-FR')};
+  DB.missions.push(mission);
+  saveData(DB);
+  closeMissionModal();
+  document.getElementById('mission-text').value='';
+  toast('Mission envoyée !','accent');
+}
+
+function quickMission(code,name){
+  updateMissionSelect();
+  document.getElementById('mission-to').value = code;
+  openMissionModal();
+}
+
+function loadCallerWorkspace(){
+  const today = new Date().toLocaleDateString('fr-FR');
+  const myMissions = DB.missions.filter(m=>m.to===currentUser.code||m.to==='all');
+  const lastMission = myMissions[myMissions.length-1];
+  const block = document.getElementById('ws-mission-block');
+  if(lastMission){
+    block.style.display='block';
+    document.getElementById('ws-mission-text').textContent = lastMission.text;
+    updateMissionProgress();
+  }
+  updateCallerStats();
+  renderCallHistory();
+}
+
+function updateMissionProgress(){
+  if(!currentUser)return;
+  const myMissions = DB.missions.filter(m=>m.to===currentUser.code||m.to==='all');
+  const lastMission = myMissions[myMissions.length-1];
+  if(!lastMission)return;
+  const today = new Date().toLocaleDateString('fr-FR');
+  const calls = DB.calls.filter(c=>c.callerCode===currentUser.code&&c.date===today).length;
+  const pct = Math.min(Math.round(calls/lastMission.target*100),100);
+  document.getElementById('ws-mission-prog').textContent = calls+' / '+lastMission.target+' appels';
+  document.getElementById('ws-mission-bar').style.width = pct+'%';
+}
+
+// ─── SCRIPT TOGGLE ─────────────────────────────────────
+function toggleScript(header){
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+  header.querySelector('span:last-child').textContent = body.classList.contains('open')?'▲':'▼';
+}
+
+// ─── CSV EXPORT ────────────────────────────────────────
+function exportCSV(){
+  const headers = ['Entreprise','Contact','Date','Heure','Statut','Caller','Notes'];
+  const rows = DB.rdvs.map(r=>[r.company,r.contact,r.date,r.time,r.status,r.caller,(r.notes||'').replace(/,/g,' ')]);
+  const csv = [headers.join(','),...rows.map(r=>r.join(','))].join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'yunex_rdv_'+new Date().toLocaleDateString('fr-FR').replace(/\//g,'-')+'.csv';
+  a.click();
+  toast('Export CSV téléchargé','accent');
+}
+
+// ─── TOAST ─────────────────────────────────────────────
+function toast(msg,type){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = type==='accent'?'accent-toast':'';
+  el.style.display='flex';
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.style.display='none',3000);
+}
+
+// Init
+window.addEventListener('load',()=>{
+  document.getElementById('login-screen').style.display='flex';
+});
+</script>
+</body>
+</html>
